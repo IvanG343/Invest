@@ -1,5 +1,8 @@
 $(document).ready(function() {
 	$('form').submit(function(event) {
+		if ($(this).attr('id') == 'no_ajax') {
+			return;
+		}
 		var json;
 		event.preventDefault();
 		$.ajax({

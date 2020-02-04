@@ -1,35 +1,28 @@
-<header class="masthead" style="background-image: url('/public/images/home-bg.jpg')">
-    <div class="container">
-        <div class="row">
-            <div class="col-lg-8 col-md-10 mx-auto">
-                <div class="site-heading">
-                    <h1>Видеоуроки PHP</h1>
-                    <span class="subheading">простой блог на php - oop - mvc</span>
+<div class="container">
+    <h1 class="my-4">Тарифы</h1>
+    <div class="row">
+        <?php foreach ($tariffs as $key => $val): ?>
+            <div class="col-lg-4 mb-4">
+                <div class="card h-100">
+                    <h3 class="card-header"><?php echo $val['title']; ?></h3>
+                    <div class="card-body">
+                        <div class="display-4"><?php echo $val['percent']; ?> %</div>
+                        <div class="font-italic"><?php echo $val['description']; ?></div>
+                    </div>
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item">Минимальная инвестиция: <?php echo $val['min']; ?> $</li>
+                        <li class="list-group-item">Максимальная инвестиция: <?php echo $val['max']; ?> $</li>
+                        <li class="list-group-item">Период инвестиции: <?php echo $val['hour']; ?> ч.</li>
+                        <li class="list-group-item">
+                            <?php if (isset($_SESSION['account']['id'])): ?>
+                                <a href="/dashboard/invest/<?php echo $key; ?>" class="btn btn-primary">Инвестировать</a>
+                            <?php else: ?>
+                               <p>* Для покупки этого тарифа необходима авторизация</p>
+                            <?php endif; ?>
+                        </li>
+                    </ul>
                 </div>
             </div>
-        </div>
-    </div>
-</header>
-<div class="container">
-    <div class="row">
-        <div class="col-lg-8 col-md-10 mx-auto">
-            <?php if (empty($list)): ?>
-                <p>Список постов пуст</p>
-            <?php else: ?>
-                <?php foreach ($list as $val): ?>
-                    <div class="post-preview">
-                        <a href="/post/<?php echo $val['id']; ?>">
-                            <h2 class="post-title"><?php echo htmlspecialchars($val['title'], ENT_QUOTES); ?></h2>
-                            <h5 class="post-subtitle"><?php echo htmlspecialchars($val['description'], ENT_QUOTES); ?></h5>
-                        </a>
-                        <p class="post-meta">Идентфикатор этого поста <?php echo $val['id']; ?></p>
-                    </div>
-                    <hr>
-                <?php endforeach; ?>
-                <div class="clearfix">
-                    <?php echo $pagination; ?>
-                </div>
-            <?php endif; ?>
-        </div>
+        <?php endforeach; ?>
     </div>
 </div>
