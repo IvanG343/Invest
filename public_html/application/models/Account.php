@@ -22,11 +22,11 @@ class Account extends Model {
 				'message' => 'Логин пригласившего указан неверно',
 			],
 			'wallet' => [
-				'pattern' => '#^[A-z0-9]{3,15}$#',
+				'pattern' => '#^[A-Za-z0-9]{3,15}$#',
 				'message' => 'Кошелек Perfect Money указан неверно',
 			],
 			'password' => [
-				'pattern' => '#^[a-z0-9]{10,30}$#',
+				'pattern' => '#^[A-Za-z0-9]{3,15}$#',
 				'message' => 'Пароль указан неверно (разрешены только латинские буквы и цифры от 10 до 30 символов',
 			
 			],
@@ -38,6 +38,63 @@ class Account extends Model {
 			}
 		}
 		return true;
+	}
+	
+	public function checkEmailExists($email) {
+		$params = [
+			'email' => $email,
+		];
+		if($this->db->column('SELECT id FROM accounts WHERE email = :email', $params)) {
+			$this->error = 'Этот E-mail уже используется';
+			return false;
+		}
+		return true;
+	}
+	
+	public function checkLoginExists($login) {
+		$params = [
+			'login' => $login,
+		];
+		if($this->db->column('SELECT login FROM accounts WHERE login = :login', $params)) {
+			$this->error = 'Этот логин уже используется';
+			return false;
+		}
+		return true;
+	}
+	
+	public function checkTokenExists($token) {
+		$params = [
+			'token' => $token,
+		];
+		return $this->db->column('SELECT id FROM accounts WHERE token = :token', $params);
+	}
+	
+	public function activate($token) {
+		$params = [
+			'token' => $token,
+		];
+		$this->db->query('UPDATE accounts SET status = 1, token = "" WHERE token = :token', $params);
+	}
+	
+	public function createToken() {
+		return substr(str_shuffle(str_repeat('0123456789abcdefghijklmnopqrstuvwxyz', 30)), 0, 30);
+	}
+	
+	public function register($post) {
+		$token = $this->createToken();
+		$params = [
+			'id' => '',
+			'email' => $post['email'],
+			'login' => $post['login'],
+			'wallet' => $post['wallet'],
+			'password' => password_hash($post['password'], PASSWORD_BCRYPT),
+			'ref' => 0,
+			'token' => $token,
+			'status' => 0,
+		];
+		
+		$this->db->query('INSERT INTO accounts VALUES (:id, :email, :login, :wallet, :password, :ref, :token, :status)', $params);
+		mail($post['email'], 'Registration', 'Confirm: http://invest.hthere.ru/account/confirm/'.$token);
 	}
 	
 }
