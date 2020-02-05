@@ -9,7 +9,12 @@ abstract class Controller {
 	public $route;
 	public $view;
 	public $acl;
+	public $tariffs;
 	
+	/**
+	 * Controller constructor.
+	 * @param $route
+	 */
 	public function __construct($route) {
 		$this->route = $route;
 		if(!$this->checkAcl()) {
@@ -17,6 +22,7 @@ abstract class Controller {
 		}
 		$this->view = new View($route);
 		$this->model = $this->loadModule($route["controller"]);
+		$this->tariffs = require 'application/config/tariffs.php';
 	}
 
 	public function loadModule($name) {

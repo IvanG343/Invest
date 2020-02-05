@@ -114,7 +114,7 @@ class Account extends Model {
 		];
 		
 		$this->db->query('INSERT INTO accounts VALUES (:id, :email, :login, :wallet, :password, :ref, :token, :status)', $params);
-		mail($post['email'], 'Registration', 'Confirm: <a href="http://invest.hthere.ru/account/confirm/'.$token.'" target="_blank">confirm</a>');
+		mail($post['email'], 'Registration', 'Confirm: http://invest.hthere.ru/account/confirm/'.$token.'');
 	}
 	
 	public function checkData($login, $password) {
@@ -155,7 +155,7 @@ class Account extends Model {
 			'token' => $token,
 		];
 		$this->db->query('UPDATE accounts SET token = :token WHERE email = :email', $params);
-		mail($post['email'], 'Recovery', 'Confirm: <a href="http://invest.hthere.ru/account/reset/'.$token.'" target="_blank">reset</a>');
+		mail($post['email'], 'Recovery', 'Confirm: http://invest.hthere.ru/account/reset/'.$token.'');
 	}
 	
 	public function reset($token) {
