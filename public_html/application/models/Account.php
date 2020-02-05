@@ -26,7 +26,7 @@ class Account extends Model {
 				'message' => 'Кошелек Perfect Money указан неверно',
 			],
 			'password' => [
-				'pattern' => '#^[A-Za-z0-9]{3,15}$#',
+				'pattern' => '#^[A-Za-z0-9]{10,30}$#',
 				'message' => 'Пароль указан неверно (разрешены только латинские буквы и цифры от 10 до 30 символов',
 			
 			],
@@ -50,11 +50,7 @@ class Account extends Model {
 		$params = [
 			'email' => $email,
 		];
-		if($this->db->column('SELECT id FROM accounts WHERE email = :email', $params)) {
-			$this->error = 'Этот E-mail уже используется';
-			return false;
-		}
-		return true;
+		return $this->db->column('SELECT id FROM accounts WHERE email = :email', $params);
 	}
 	
 	public function checkLoginExists($login) {
@@ -150,6 +146,44 @@ class Account extends Model {
 		];
 		$data = $this->db->row('SELECT * FROM accounts WHERE login = :login', $params);
 		$_SESSION['account'] = $data[0];
+	}
+
+	public function recovery($post) {
+		$token = $this->createToken();
+		$params = [
+			'email' => $post['email'],
+			'token' => $token,
+		];
+		$this->db->query('UPDATE accounts SET token = :token WHERE email = :email', $params);
+		mail($post['email'], 'Recovery', 'Confirm: <a href="http://invest.hthere.ru/account/reset/'.$token.'" target="_blank">reset</a>');
+	}
+	
+	public function reset($token) {
+		$new_password = $this->createToken();
+		$params = [
+			'token' => $token,
+			'password' => password_hash($new_password, PASSWORD_BCRYPT),
+		];
+		$this->db->query('UPDATE accounts SET status = 1, token = "", password = :password WHERE token = :token', $params);
+		return $new_password;
+	}
+	
+	public function save($post) {
+		$params = [
+			'id' => $_SESSION['account']['id'],
+			'email' => $post['email'],
+			'wallet' => $post['wallet'],
+		];
+		if(!empty($post['password'])) {
+			$params['password'] = password_hash($post['password'], PASSWORD_BCRYPT);
+			$sql = ',password = :password';
+		} else {
+			$sql = '';
+		}
+		foreach($params as $key => $val) {
+			$_SESSION['account'][$key] = $val;
+		}
+		$this->db->query('UPDATE accounts SET email = :email, wallet = :wallet '.$sql.' WHERE id = :id', $params);
 	}
 	
 }
