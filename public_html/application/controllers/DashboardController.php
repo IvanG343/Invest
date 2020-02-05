@@ -8,7 +8,7 @@ class DashboardController extends Controller {
 	
 	public function investAction() {
 		$vars = [
-			'tariffs' => $this->tariffs[$this->route['id']],
+			'tariff' => $this->tariffs[$this->route['id']],
 		];
 		$this->view->render('Инвестировать', $vars);
 	}
