@@ -16,6 +16,10 @@ return [
 		'controller' => 'dashboard',
 		'action' => 'tariffs',
 	],
+	'dashboard/tariffs/{page:\d+}' => [
+		'controller' => 'dashboard',
+		'action' => 'tariffs',
+	],
 	'dashboard/invest/{id:\d+}' => [
 		'controller' => 'dashboard',
 		'action' => 'invest',
@@ -24,7 +28,15 @@ return [
 		'controller' => 'dashboard',
 		'action' => 'history',
 	],
+	'dashboard/history/{page:\d+}' => [
+		'controller' => 'dashboard',
+		'action' => 'history',
+	],
 	'dashboard/referrals' => [
+		'controller' => 'dashboard',
+		'action' => 'referrals',
+	],
+	'dashboard/referrals/{page:\d+}' => [
 		'controller' => 'dashboard',
 		'action' => 'referrals',
 	],
@@ -59,6 +71,35 @@ return [
 	],
 	'account/logout' => [
 		'controller' => 'account',
+		'action' => 'logout',
+	],
+	// AdminController
+	'admin/withdraw' => [
+		'controller' => 'admin',
+		'action' => 'withdraw',
+	],
+	'admin/history' => [
+		'controller' => 'admin',
+		'action' => 'history',
+	],
+	'admin/history/{page:\d+}' => [
+		'controller' => 'admin',
+		'action' => 'history',
+	],
+	'admin/tariffs' => [
+		'controller' => 'admin',
+		'action' => 'tariffs',
+	],
+	'admin/tariffs/{page:\d+}' => [
+		'controller' => 'admin',
+		'action' => 'tariffs',
+	],
+	'admin/login' => [
+		'controller' => 'admin',
+		'action' => 'login',
+	],
+	'admin/logout' => [
+		'controller' => 'admin',
 		'action' => 'logout',
 	],
 ];

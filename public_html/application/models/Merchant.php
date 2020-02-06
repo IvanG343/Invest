@@ -21,9 +21,9 @@ class Merchant extends Model {
 		$tid += 0;
 		$uid += 0;
 		$amount = $post['PAYMENT_AMOUNT'] + 0;
-//		if (strtoupper(md5($params)) != $post['V2_HASH']) {
-//			return false;
-//		}
+		if (strtoupper(md5($params)) != $post['V2_HASH']) {
+			return false;
+		}
 		if ($post['PAYMENT_UNITS'] != 'USD') {
 			return false;
 		}
