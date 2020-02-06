@@ -33,6 +33,13 @@ class DashboardController extends Controller {
 	}
 	
 	public function referralsAction() {
+		if(!empty($_POST)) {
+			if($_SESSION['account']['refBalance'] <= 0) {
+				$this->view->message('error', 'Баланс пуст');
+			}
+			$this->model->createRefWithdraw();
+			$this->view->message('success', 'Заявка на вывод принята');
+		}
 		$pagination = new Pagination($this->route, $this->model->referralsCount());
 		$vars = [
 			"pagination" => $pagination->get(),

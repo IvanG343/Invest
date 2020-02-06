@@ -6,17 +6,17 @@
 				<div class="control-group form-group">
 					<div class="controls">
 						<label>Ссылка для приглашения:</label>
-						<input type="text" class="form-control"
+						<input type="text" class="form-control" name="refLink"
 									 value="<?php echo $_SERVER['REQUEST_SCHEME'].'://'.$_SERVER['HTTP_HOST']; ?>/account/register/<?php echo $_SESSION['account']['login']; ?>"
-									 disabled>
+									 readonly>
 						<p class="help-block"></p>
 					</div>
 				</div>
 				<div class="control-group form-group">
 					<div class="controls">
 						<label>Реферальный баланс:</label>
-						<input type="text" class="form-control" value="<?php echo $_SESSION['account']['refBalance']; ?> $"
-									 disabled>
+						<input type="text" name="refBalance" class="form-control" value="<?php echo $_SESSION['account']['refBalance']; ?> $"
+									 readonly>
 						<p class="help-block"></p>
 					</div>
 				</div>

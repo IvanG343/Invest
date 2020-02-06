@@ -28,7 +28,28 @@ class AdminController extends Controller {
 	}
 	
 	public function withdrawAction() {
-		$this->view->render('Заказы на выод средств');
+		if(!empty($_POST)) {
+			if($_POST['type']== 'ref') {
+				$result = $this->model->withdrawRefComplete($_POST['id']);
+				if($result) {
+					$this->view->location('admin/withdraw');
+				} else {
+					$this->view->message('error', 'Ошибка обработки запроса');
+				}
+			} elseif($_POST['type'] == 'tariff') {
+				$result = $this->model->withdrawTariffsComplete($_POST['id']);
+				if($result) {
+					$this->view->location('admin/withdraw');
+				} else {
+					$this->view->message('error', 'Ошибка обработки запроса');
+				}
+			}
+		}
+		$vars = [
+			'listRef' => $this->model->withdrawRefList(),
+			'listTariffs' => $this->model->withdrawTariffsList(),
+		];
+		$this->view->render('Заказы на выод средств', $vars);
 	}
 	
 	public function historyAction() {
@@ -42,7 +63,12 @@ class AdminController extends Controller {
 	}
 	
 	public function tariffsAction() {
-		$this->view->render('Список инвестиций');
+		$pagination = new Pagination($this->route, $this->model->tariffsCount());
+		$vars = [
+			"pagination" => $pagination->get(),
+			"list" => $this->model->tariffsList($this->route),
+		];
+		$this->view->render('Список инвестиций', $vars);
 	}
 	
 	public function logoutAction() {

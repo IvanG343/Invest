@@ -60,4 +60,30 @@ class Dashboard extends Model {
 		return $this->db->row("SELECT * FROM tariffs WHERE uid = :uid ORDER BY id DESC LIMIT :start, :max", $params);
 	}
 	
+	public function createRefWithdraw() {
+		$amount = $_SESSION['account']['refBalance'];
+		$_SESSION['account']['refBalance'] = 0;
+		
+		$params = [
+			'id' => $_SESSION['account']['id'],
+		];
+		$this->db->query('UPDATE accounts SET refBalance = 0 WHERE id = :id', $params);
+		
+		$params = [
+			'id' => '',
+			'uid' =>  $_SESSION['account']['id'],
+			'unixTime' => time(),
+			'amount' => $amount,
+		];
+		$this->db->query('INSERT INTO ref_withdraw VALUES(:id, :uid, :unixTime, :amount)', $params);
+		
+		$params = [
+			'id' => '',
+			'uid' =>  $_SESSION['account']['id'],
+			'unixTime' => time(),
+			'description' => 'Вывод реферального вознаграждения, сумма '.$amount.' $',
+		];
+		$this->db->query('INSERT INTO history VALUES(:id, :uid, :unixTime, :description)', $params);
+	}
+	
 }
